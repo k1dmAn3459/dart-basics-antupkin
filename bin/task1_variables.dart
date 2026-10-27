@@ -60,6 +60,6 @@ void demonstrateNullSafety() {
   String safeText = nullableText ?? 'Значення за замовчуванням';
   late String lateInitialized;
   lateInitialized = 'Змінна late отримала значення пізніше';
-  print('Оператор ??: $safeText (безпечний виклик довжини ?.: ${nullableText?.length})');
+  print('Оператор ??: $safeText');
   print('Late змінна: $lateInitialized\n');
-}
+} 
