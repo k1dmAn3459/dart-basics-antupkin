@@ -4,12 +4,13 @@ import 'dart:io';
 import 'package:dart_basics_antupkin/models/student.dart';
 
 Future<void> main() async {
-  print('=== Dart Async Programming Demo ===\n');
+  print('=== Dart Async Programming & File I/O Demo ===\n');
   await demonstrateFutures();
   await demonstrateStreams();
   await demonstrateFileOperations();
 }
 
+// 1. Симуляція асинхронного API запиту
 Future<String> fetchStudentData(String studentId) async {
   await Future.delayed(const Duration(milliseconds: 300));
   if (studentId.isEmpty) {
@@ -22,6 +23,7 @@ Future<String> fetchStudentData(String studentId) async {
   });
 }
 
+// 2. Читання списку студентів з JSON файлу
 Future<List<Student>> loadStudentsFromFile(String filename) async {
   final file = File(filename);
   if (!await file.exists()) return [];
@@ -32,6 +34,7 @@ Future<List<Student>> loadStudentsFromFile(String filename) async {
       .toList();
 }
 
+// 3. Асинхронний запис списку студентів у JSON файл
 Future<void> saveStudentsToFile(List<Student> students, String filename) async {
   final file = File(filename);
   final encoded = const JsonEncoder.withIndent('  ')
@@ -39,6 +42,7 @@ Future<void> saveStudentsToFile(List<Student> students, String filename) async {
   await file.writeAsString(encoded);
 }
 
+// 4. Генератор потоку даних (Stream async*)
 Stream<Student> studentStream() async* {
   final sample = [
     Student(
@@ -63,17 +67,19 @@ Stream<Student> studentStream() async* {
   }
 }
 
+// Демонстрація Futures, Future.wait та обробки помилок
 Future<void> demonstrateFutures() async {
-  print('--- 1. Futures, Future.wait & Timeouts ---');
+  print('--- 1. Futures, Future.wait & Error Handling ---');
   final stopwatch = Stopwatch()..start();
   try {
+    // Паралельне виконання двох запитів
     final responses = await Future.wait([
       fetchStudentData('ST-101'),
       fetchStudentData('ST-102'),
     ]).timeout(const Duration(seconds: 3));
 
     stopwatch.stop();
-    print('Паралельний запит виконано за ${stopwatch.elapsedMilliseconds} мс:');
+    print('Паралельні запити виконано за ${stopwatch.elapsedMilliseconds} мс:');
     for (final r in responses) {
       print('  -> $r');
     }
@@ -83,27 +89,34 @@ Future<void> demonstrateFutures() async {
   print('');
 }
 
+// Демонстрація роботи з потоками (Stream та await for)
 Future<void> demonstrateStreams() async {
-  print('--- 2. Streams Demo ---');
+  print('--- 2. Stream Operations Demo ---');
   final collected = <Student>[];
   await for (final student in studentStream()) {
     print('Отримано зі Stream: ${student.fullName} (GPA: ${student.gpa})');
     collected.add(student);
   }
-  print('');
+  print('Загалом отримано студентів через поток: ${collected.length}\n');
 }
 
+// Демонстрація асинхронного читання/запису файлів (File I/O)
 Future<void> demonstrateFileOperations() async {
   print('--- 3. Async JSON File I/O Demo ---');
   const filename = 'students_data.json';
+  
+  // Отримуємо студентів із потоку та конвертуємо в список
   final studentsToSave = await studentStream().toList();
 
+  // Записуємо у файл
   await saveStudentsToFile(studentsToSave, filename);
-  print('Дані збережено у файл: $filename');
+  print('Дані успішно збережено у JSON файл: $filename');
 
+  // Читаємо назад із файлу
   final loaded = await loadStudentsFromFile(filename);
-  print('Успішно прочитано з JSON файлу студентів: ${loaded.length}');
+  print('Прочитано студентів із файлу: ${loaded.length}');
   for (final s in loaded) {
-    print('  * $s');
+    print('  * ${s.fullName} (Курсів: ${s.grades.keys.length})');
   }
+  print('');
 }
