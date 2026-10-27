@@ -1,31 +1,32 @@
-import 'student.dart';
+﻿import 'student.dart';
 
 class Course {
   final String id;
-  final String title;
+  final String name;
+  final String description;
   final int credits;
-  final List<Student> enrolledStudents;
+  final String instructor;
+  final List<String> prerequisites;
 
   Course({
     required this.id,
-    required this.title,
+    required this.name,
+    required this.description,
     required this.credits,
-    List<Student>? enrolledStudents,
-  }) : enrolledStudents = enrolledStudents ?? [];
+    required this.instructor,
+    List<String>? prerequisites,
+  }) : prerequisites = prerequisites ?? [];
 
-  void enrollStudent(Student student) {
-    if (!enrolledStudents.any((s) => s.id == student.id)) {
-      enrolledStudents.add(student);
-    }
-  }
+  bool hasPrerequisites() => prerequisites.isNotEmpty;
 
-  bool removeStudent(String studentId) {
-    final initial = enrolledStudents.length;
-    enrolledStudents.removeWhere((s) => s.id == studentId);
-    return enrolledStudents.length < initial;
+  bool canStudentEnroll(Student student) {
+    if (!hasPrerequisites()) return true;
+    final passed = student.getPassedCourses().toSet();
+    return prerequisites.every((prereq) => passed.contains(prereq));
   }
 
   @override
-  String toString() =>
-      'Course($id: $title, credits: $credits, students: ${enrolledStudents.length})';
+  String toString() {
+    return 'Course($id: "$name", credits: $credits, instructor: $instructor, prereqs:$prerequisites)';
+  }
 }
