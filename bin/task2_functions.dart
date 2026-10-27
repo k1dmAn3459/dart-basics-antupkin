@@ -1,6 +1,4 @@
-﻿import 'package:dart_basics_antupkin/utils/data_processor.dart';
-
-void main() {
+﻿void main() {
   print('=== Dart Functions Demo ===\n');
   testBasicFunctions();
   testAdvancedFunctions();
