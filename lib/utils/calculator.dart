@@ -4,7 +4,9 @@
   static double multiply(double a, double b) => a * b;
 
   static double divide(double a, double b) {
-    if (b == 0) throw ArgumentError('Ділення на нуль неможливе');
+    if (b == 0) {
+      throw ArgumentError('Ділення на нуль неможливе');
+    }
     return a / b;
   }
 

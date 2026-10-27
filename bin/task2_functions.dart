@@ -1,31 +1,34 @@
-﻿import 'package:dart_basics_antupkin/utils/data_processor.dart';
-
-void main() {
+﻿void main() {
   print('=== Dart Functions Demo ===\n');
   testBasicFunctions();
   testAdvancedFunctions();
   testFunctionalProgramming();
 }
 
-int calculateSum(int a, int b) => a + b;
+// 1. Звичайні функції з параметрами
+int calculateSum(int a, int b) {
+  return a + b;
+}
 
 double calculateAverage(List<double> numbers) {
   if (numbers.isEmpty) return 0.0;
   return numbers.reduce((a, b) => a + b) / numbers.length;
 }
 
+// 2. Функція з іменованими та необов'язковими параметрами
 String formatName(
   String firstName,
   String lastName, {
   String? middleName,
   bool uppercase = false,
 }) {
-  final full = middleName != null
+  final result = middleName != null
       ? '$lastName $firstName $middleName'
       : '$firstName $lastName';
-  return uppercase ? full.toUpperCase() : full;
+  return uppercase ? result.toUpperCase() : result;
 }
 
+// 3. Рекурсивні функції
 int fibonacci(int n) {
   if (n <= 0) return 0;
   if (n == 1) return 1;
@@ -37,33 +40,51 @@ int factorial(int n) {
   return n * factorial(n - 1);
 }
 
+// Допоміжна функція текстового аналізатора (Deliverable 2.3)
+Map<String, dynamic> analyzeText(String text) {
+  final words = text
+      .trim()
+      .split(RegExp(r'\s+'))
+      .where((w) => w.isNotEmpty)
+      .toList();
+  final charCountNoSpaces = text.replaceAll(' ', '').length;
+  return {
+    'totalChars': text.length,
+    'charsWithoutSpaces': charCountNoSpaces,
+    'wordCount': words.length,
+  };
+}
+
 void testBasicFunctions() {
   print('--- 1. Basic & Recursive Functions ---');
-  print('calculateSum(15, 27) = ${calculateSum(15, 27)}');
-  print('calculateAverage([90, 95, 88, 92]) = ${calculateAverage([90, 95, 88, 92])}');
-  print('factorial(6) = ${factorial(6)} | fibonacci(8) = ${fibonacci(8)}\n');
+  print('Сума calculateSum(15, 27) = ${calculateSum(15, 27)}');
+  print('Середнє calculateAverage([90, 95, 88, 92]) = ${calculateAverage([90, 95, 88, 92])}');
+  print('Факторіал 5! = ${factorial(5)} | Число Фібоначчі (8) = ${fibonacci(8)}\n');
 }
 
 void testAdvancedFunctions() {
-  print('--- 2. Optional & Named Parameters + Text Analyzer ---');
-  print('Стандартне ім’я: ${formatName("Валерій", "Антипкін")}');
+  print('--- 2. Named Parameters & Text Analyzer ---');
+  print('Звичайне форматування: ${formatName("Валерій", "Антипкін")}');
   print('Повне ім’я (CAPS): ${formatName("Валерій", "Антипкін", middleName: "Павлович", uppercase: true)}');
 
-  const sampleText = 'Dart functions are first class objects and Dart is expressive';
-  final wordStats = DataProcessor.countWords(sampleText);
-  print('Текстовий аналізатор (кількість слів: $wordStats, символів: ${sampleText.length})\n');
+  const sample = 'Dart дозволяє писати швидкий та надійний код для мобільних платформ';
+  final stats = analyzeText(sample);
+  print('Текстовий аналізатор рядка: "$sample"');
+  print('Результат аналізу: слів = ${stats["wordCount"]}, символів = ${stats["totalChars"]} (без пробілів: ${stats["charsWithoutSpaces"]})\n');
 }
 
 void testFunctionalProgramming() {
-  print('--- 3. Functional Programming & Closures ---');
+  print('--- 3. Functional Programming (map, where, fold) & Closures ---');
   final numbers = [1, 2, 3, 4, 5, 6];
-  final mapped = numbers.map((n) => n * 10).toList();
-  final filtered = numbers.where((n) => n > 3).toList();
-  final sum = numbers.fold<int>(0, (prev, el) => prev + el);
+  final squared = numbers.map((n) => n * n).toList();
+  final evenOnly = numbers.where((n) => n.isEven).toList();
+  final totalSum = numbers.fold<int>(0, (prev, element) => prev + element);
 
-  int multiplierFactor = 4;
-  int Function(int) multiplyClosure = (int x) => x * multiplierFactor;
+  // Замикання (Closure): функція запам'ятовує змінну factor зі свого оточення
+  int factor = 10;
+  int Function(int) multiplyByFactor = (int value) => value * factor;
 
-  print('map (*10): $mapped | where (>3): $filtered | fold (sum): $sum');
-  print('Closure (5 * $multiplierFactor): ${multiplyClosure(5)}\n');
+  print('Початковий список: $numbers');
+  print('map (квадрати): $squared | where (парні): $evenOnly | fold (сума): $totalSum');
+  print('Демонстрація Closure (7 * $factor): ${multiplyByFactor(7)}\n');
 }
