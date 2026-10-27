@@ -1,24 +1,53 @@
-import 'package:test/test.dart';
+﻿import 'package:test/test.dart';
 import 'package:dart_basics_antupkin/models/student.dart';
 import 'package:dart_basics_antupkin/models/course.dart';
 import 'package:dart_basics_antupkin/models/university.dart';
 
 void main() {
-  test('Student, Course and University models test', () {
-    final s = Student(
-      id: '1',
-      firstName: 'Валерій',
-      lastName: 'Антипкін',
-      age: 20,
-    );
-    s.addGrade('Dart', 90);
-    s.addGrade('SQL', 100);
-    expect(s.averageGrade, equals(95.0));
-    final c = Course(id: 'C1', title: 'Dart', credits: 5);
-    c.enrollStudent(s);
-    expect(c.enrolledStudents.length, equals(1));
-    final u = University(name: 'ІСТУ');
-    u.addStudent(s);
-    expect(u.findStudentById('1')?.fullName, equals('Валерій Антипкін'));
+  group('Models Unit Tests', () {
+    test('Student GPA, passed courses and JSON serialization', () {
+      final student = Student(
+        id: 'S1',
+        firstName: 'Валерій',
+        lastName: 'Антипкін',
+        birthDate: DateTime(2000, 1, 1),
+      );
+      student.addGrade('CS101', 95.0);
+      student.addGrade('CS102', 50.0);
+
+      expect(student.gpa, equals(72.5));
+      expect(student.getPassedCourses(), equals(['CS101']));
+
+      final json = student.toJson();
+      final restored = Student.fromJson(json);
+      expect(restored.fullName, equals('Валерій Антипкін'));
+      expect(restored.gpa, equals(72.5));
+    });
+
+    test('Course prerequisites and University CRUD', () {
+      final course = Course(
+        id: 'CS201',
+        name: 'Advanced Dart',
+        description: 'OOP & Async',
+        credits: 5,
+        instructor: 'Dr. Smith',
+        prerequisites: ['CS101'],
+      );
+      final student = Student(
+        id: 'S1',
+        firstName: 'Валерій',
+        lastName: 'Антипкін',
+        birthDate: DateTime(2000, 1, 1),
+      );
+      expect(course.canStudentEnroll(student), isFalse);
+
+      student.addGrade('CS101', 85.0);
+      expect(course.canStudentEnroll(student), isTrue);
+
+      final uni = University(name: 'ІСТУ', courses: [course]);
+      uni.addStudent(student);
+      expect(uni.findStudentById('S1')?.fullName, equals('Валерій Антипкін'));
+      expect(uni.getAvailableCoursesForStudent('S1').length, equals(1));
+    });
   });
 }
