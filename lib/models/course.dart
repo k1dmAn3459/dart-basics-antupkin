@@ -17,16 +17,18 @@ class Course {
     List<String>? prerequisites,
   }) : prerequisites = prerequisites ?? [];
 
+  // Перевірка наявності попередніх вимог
   bool hasPrerequisites() => prerequisites.isNotEmpty;
 
+  // Перевірка, чи склав студент усі необхідні попередні курси (оцінка >= 60)
   bool canStudentEnroll(Student student) {
     if (!hasPrerequisites()) return true;
-    final passed = student.getPassedCourses().toSet();
-    return prerequisites.every((prereq) => passed.contains(prereq));
+    final passedCourses = student.getPassedCourses().toSet();
+    return prerequisites.every((prereqId) => passedCourses.contains(prereqId));
   }
 
   @override
   String toString() {
-    return 'Course($id: "$name", credits: $credits, instructor: $instructor, prereqs:$prerequisites)';
+    return 'Course($id: "$name", credits: $credits, instructor: $instructor, prereqs: $prerequisites)';
   }
 }
