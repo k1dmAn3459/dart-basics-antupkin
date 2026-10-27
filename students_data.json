@@ -1,0 +1,26 @@
+[
+  {
+    "id": "ST-101",
+    "firstName": "Валерій",
+    "lastName": "Антипкін",
+    "birthDate": "1990-11-15T00:00:00.000",
+    "enrolledCourses": [],
+    "grades": {
+      "Dart": 96.0,
+      "Flutter": 95.0
+    },
+    "skills": []
+  },
+  {
+    "id": "ST-102",
+    "firstName": "Андрій",
+    "lastName": "Шевченко",
+    "birthDate": "2003-08-12T00:00:00.000",
+    "enrolledCourses": [],
+    "grades": {
+      "Dart": 88.0,
+      "Flutter": 91.0
+    },
+    "skills": []
+  }
+]
