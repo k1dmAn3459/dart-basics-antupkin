@@ -1,6 +1,7 @@
 ﻿import 'student.dart';
 import 'course.dart';
 
+// Абстрактний базовий клас
 abstract class Person {
   final String id;
   final String firstName;
@@ -14,7 +15,7 @@ abstract class Person {
     required this.birthDate,
   });
 
-  String get fullName => '$firstName$lastName';
+  String get fullName => '$firstName $lastName';
 
   int get age {
     final now = DateTime.now();
@@ -26,9 +27,10 @@ abstract class Person {
     return years;
   }
 
-  String get role;
+  String get role; // Абстрактний геттер
 }
 
+// Клас Professor успадковує Person
 class Professor extends Person {
   final String department;
   final List<String> taughtCourses;
@@ -47,17 +49,22 @@ class Professor extends Person {
   @override
   String get role => 'Professor';
 
+  // Специфічні методи професора
   void assignCourse(String courseId) {
     if (!taughtCourses.contains(courseId)) {
       taughtCourses.add(courseId);
     }
   }
 
+  bool teachesCourse(String courseId) => taughtCourses.contains(courseId);
+
   @override
-  String toString() =>
-      'Professor($id:$fullName, dept: $department, courses:$taughtCourses)';
+  String toString() {
+    return 'Professor($id: $fullName, dept: "$department", courses: $taughtCourses)';
+  }
 }
 
+// Система управління університетом
 class University {
   final String name;
   final List<Student> students;
@@ -73,6 +80,7 @@ class University {
         professors = professors ?? [],
         courses = courses ?? [];
 
+  // CRUD операції
   void addStudent(Student student) {
     if (!students.any((s) => s.id == student.id)) {
       students.add(student);
@@ -84,8 +92,8 @@ class University {
   }
 
   Student? findStudentById(String id) {
-    for (final s in students) {
-      if (s.id == id) return s;
+    for (final student in students) {
+      if (student.id == id) return student;
     }
     return null;
   }
@@ -107,14 +115,14 @@ class University {
   }
 
   Map<String, dynamic> generateStatistics() {
-    final totalStudents = students.length;
-    final avgGpa = totalStudents == 0
+    final count = students.length;
+    final avgGpa = count == 0
         ? 0.0
-        : students.fold<double>(0.0, (sum, s) => sum + s.gpa) / totalStudents;
+        : students.fold<double>(0.0, (sum, s) => sum + s.gpa) / count;
 
     return {
       'universityName': name,
-      'totalStudents': totalStudents,
+      'totalStudents': count,
       'totalProfessors': professors.length,
       'totalCourses': courses.length,
       'averageGPA': double.parse(avgGpa.toStringAsFixed(2)),
