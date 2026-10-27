@@ -2,10 +2,12 @@
 import '../models/university.dart';
 
 class DataProcessor {
+  // 1. Робота зі списками (List)
   static List<int> filterEvenNumbers(List<int> numbers) {
     return numbers.where((n) => n.isEven).toList();
   }
 
+  // Підрахунок частоти слів у тексті
   static Map<String, int> countWords(String text) {
     final cleaned = text
         .toLowerCase()
@@ -20,6 +22,7 @@ class DataProcessor {
     return counts;
   }
 
+  // Сортування студентів за середнім балом (GPA)
   static List<Map<String, dynamic>> sortStudentsByGPA(List<Student> students) {
     final sorted = List<Student>.from(students)
       ..sort((a, b) => b.gpa.compareTo(a.gpa));
@@ -32,6 +35,7 @@ class DataProcessor {
         .toList();
   }
 
+  // 2. Робота з множинами (Set)
   static Set<String> getUniqueSkills(List<Student> students) {
     return students.expand((s) => s.skills).toSet();
   }
@@ -43,6 +47,7 @@ class DataProcessor {
         .reduce((a, b) => a.intersection(b));
   }
 
+  // 3. Робота зі словниками (Map)
   static Map<String, List<Student>> groupStudentsByYear(
       List<Student> students) {
     final grouped = <String, List<Student>>{};
@@ -67,6 +72,7 @@ class DataProcessor {
     });
   }
 
+  // 4. Комплексний звіт по університету (Deliverable 4.3)
   static List<Map<String, dynamic>> generateReport(University university) {
     final courseAverages = calculateAverageGradesByCourse(university.students);
     return university.courses.map((course) {

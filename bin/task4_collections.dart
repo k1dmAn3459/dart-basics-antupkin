@@ -12,6 +12,7 @@ void main() {
   demonstrateAdvancedOperations();
 }
 
+// Тестовий набір даних студентів
 List<Student> _getSampleStudents() {
   return [
     Student(
@@ -46,42 +47,46 @@ List<Student> _getSampleStudents() {
 
 void demonstrateLists() {
   print('--- 1. Lists Demo ---');
-  final rawNumbers = [14, 7, 22, 9, 31, 40, 18];
-  final evens = DataProcessor.filterEvenNumbers(rawNumbers);
-  final sum = rawNumbers.reduce((a, b) => a + b);
+  final numbers = [14, 7, 22, 9, 31, 40, 18];
+  final evens = DataProcessor.filterEvenNumbers(numbers);
+  final sum = numbers.reduce((a, b) => a + b);
 
-  print('Парні числа: $evens | Сума елементів: $sum');
-  print('Рейтинг студентів за GPA: ${DataProcessor.sortStudentsByGPA(_getSampleStudents())}\n');
+  print('Парні числа: $evens | Сума: $sum');
+  print('Сортування студентів за GPA: ${DataProcessor.sortStudentsByGPA(_getSampleStudents())}\n');
 }
 
 void demonstrateSets() {
   print('--- 2. Sets Demo ---');
   final students = _getSampleStudents();
-  print('Унікальні навички всіх студентів: ${DataProcessor.getUniqueSkills(students)}');
-  print('Спільні курси для всіх студентів: ${DataProcessor.findCommonCourses(students)}\n');
+  print('Унікальні навички всіх студентів (Union): ${DataProcessor.getUniqueSkills(students)}');
+  print('Спільні курси студентів (Intersection): ${DataProcessor.findCommonCourses(students)}\n');
 }
 
 void demonstrateMaps() {
   print('--- 3. Maps Demo ---');
   final students = _getSampleStudents();
   final byYear = DataProcessor.groupStudentsByYear(students);
-  print('Групування за роком народження: ${byYear.map((k, v) => MapEntry(k, v.map((s) => s.fullName).toList()))}');
+  
+  print('Групування за роком народження:');
+  byYear.forEach((year, list) {
+    print('   Рік $year: ${list.map((s) => s.fullName).toList()}');
+  });
   print('Середній бал по курсах: ${DataProcessor.calculateAverageGradesByCourse(students)}\n');
 }
 
 void demonstrateAdvancedOperations() {
-  print('--- 4. Advanced Operations & CSV Data Analyzer ---');
+  print('--- 4. CSV Data Analysis & Advanced Report (Deliverable 4.3) ---');
   final students = _getSampleStudents();
   final uni = University(
     name: 'ІСТУ',
     students: students,
     courses: [
-      Course(id: 'CS101', name: 'Dart Basics', description: 'Core Dart', credits: 4, instructor: 'Мельник О.'),
-      Course(id: 'CS102', name: 'Flutter UI', description: 'Mobile UI', credits: 5, instructor: 'Мельник О.'),
+      Course(id: 'CS101', name: 'Dart Basics', description: 'Core', credits: 4, instructor: 'Мельник О.'),
+      Course(id: 'CS102', name: 'Flutter UI', description: 'UI', credits: 5, instructor: 'Мельник О.'),
     ],
   );
 
-  // Створюємо та аналізуємо CSV файл з даними студентів (Deliverable 4.3)
+  // Створюємо демонстраційний CSV файл
   final csvFile = File('students_sample.csv');
   final csvBuffer = StringBuffer('id,fullName,birthYear,gpa\n');
   for (final s in students) {
@@ -89,7 +94,14 @@ void demonstrateAdvancedOperations() {
   }
   csvFile.writeAsStringSync(csvBuffer.toString());
 
+  // Читаємо і аналізуємо CSV файл
   final lines = csvFile.readAsLinesSync().skip(1);
-  print('Прочитано рядків із CSV файлу (${csvFile.path}): ${lines.length}');
-  print('Згенерований звіт по курсах: ${DataProcessor.generateReport(uni)}\n');
+  print('Зчитано рядків із CSV файлу (${csvFile.path}): ${lines.length}');
+  
+  final report = DataProcessor.generateReport(uni);
+  print('Згенерований звіт університету по курсах:');
+  for (final row in report) {
+    print('  - Курс: ${row["courseName"]} | Студентів: ${row["enrolledCount"]} | Середній бал: ${row["averageGrade"]}');
+  }
+  print('');
 }
