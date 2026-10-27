@@ -1,92 +1,53 @@
-﻿class Student {
-  final String id;
-  final String firstName;
-  final String lastName;
-  final DateTime birthDate;
-  final List<String> enrolledCourses;
-  final Map<String, double> grades;
-  final List<String> skills;
+﻿PS C:\Users\квасдопил\smarthome\dart_basics_antupkin> dart run bin/task1_variables.dart
+=== Dart Variables & Types Demo ===
 
-  Student({
-    required this.id,
-    required this.firstName,
-    required this.lastName,
-    required this.birthDate,
-    List<String>? enrolledCourses,
-    Map<String, double>? grades,
-    List<String>? skills,
-  })  : enrolledCourses = enrolledCourses ?? [],
-        grades = grades ?? {},
-        skills = skills ?? [];
+--- 1. Numbers & Calculator Demo ---
+int: 42, double: 3.14159, num: 45.14
+Type conversion: "42" (String), 95.5 (double)
+Калькулятор: 25 + 17 = 42.0, 100 / 4 = 25.0
 
-  String get fullName => '$firstName$lastName';
+--- 2. Strings Demo ---
+Ім’я: Валерій Антипкін (верхній регістр: ВАЛЕРІЙ АНТИПКІН)
+Рядок 1: Основи програмування на Dart
+Рядок 2: Мобільна розробка      (Flutter SDK)
+Довжина тексту: 78 символів, містить слово "Dart": true
 
-  int get age {
-    final now = DateTime.now();
-    int years = now.year - birthDate.year;
-    if (now.month < birthDate.month ||
-        (now.month == birthDate.month && now.day < birthDate.day)) {
-      years--;
-    }
-    return years;
-  }
+--- 3. Booleans Demo ---
+Бал (92 >= 90) І присутність (true) -> true (Підвищена стипендія)
 
-  double get gpa {
-    if (grades.isEmpty) return 0.0;
-    final sum = grades.values.reduce((a, b) => a + b);
-    return sum / grades.length;
-  }
+--- 4. Basic Collections Demo ---
+List: [Variables, Functions, OOP, Async]
+Set (тільки унікальні): {101, 102, 103}
+Map (предмет -> кредити): {Dart: 5, Databases: 4}
 
-  void enrollInCourse(String courseId) {
-    if (!enrolledCourses.contains(courseId)) {
-      enrolledCourses.add(courseId);
-    }
-  }
+--- 5. Null Safety Demo ---
+Оператор ??: Значення за замовчуванням (безпечний виклик довжини ?.: null)
+Late змінна: Змінна late отримала значення пізніше
 
-  void addGrade(String courseId, double grade) {
-    if (grade < 0 || grade > 100) {
-      throw ArgumentError('Оцінка має бути від 0 до 100');
-    }
-    enrollInCourse(courseId);
-    grades[courseId] = grade;
-  }
+PS C:\Users\квасдопил\smarthome\dart_basics_antupkin> dart run bin/task2_functions.dart
+=== Dart Functions Demo ===
 
-  List<String> getPassedCourses() {
-    return grades.entries
-        .where((entry) => entry.value >= 60.0)
-        .map((entry) => entry.key)
-        .toList();
-  }
+--- 1. Basic & Recursive Functions ---
+Сума calculateSum(15, 27) = 42
+Середнє calculateAverage([90, 95, 88, 92]) = 91.25
+Факторіал 5! = 120 | Число Фібоначчі (8) = 21
 
-  @override
-  String toString() {
-    return 'Student(id: $id, name: $fullName, age:$age, GPA: ${gpa.toStringAsFixed(2)}, courses:$enrolledCourses)';
-  }
+--- 2. Named Parameters & Text Analyzer ---
+Звичайне форматування: Валерій Антипкін
+Повне ім’я (CAPS): АНТИПКІН ВАЛЕРІЙ ПАВЛОВИЧ
+Текстовий аналізатор рядка: "Dart дозволяє писати швидкий та надійний код для мобільних платформ"
+Результат аналізу: слів = 10, символів = 67 (без пробілів: 58)
 
-  Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'firstName': firstName,
-      'lastName': lastName,
-      'birthDate': birthDate.toIso8601String(),
-      'enrolledCourses': enrolledCourses,
-      'grades': grades,
-      'skills': skills,
-    };
-  }
+--- 3. Functional Programming (map, where, fold) & Closures ---
+Початковий список: [1, 2, 3, 4, 5, 6]
+map (квадрати): [1, 4, 9, 16, 25, 36] | where (парні): [2, 4, 6] | fold (сума): 21
+Демонстрація Closure (7 * 10): 70
 
-  factory Student.fromJson(Map<String, dynamic> json) {
-    return Student(
-      id: json['id'] as String,
-      firstName: json['firstName'] as String,
-      lastName: json['lastName'] as String,
-      birthDate: DateTime.parse(json['birthDate'] as String),
-      enrolledCourses: List<String>.from(json['enrolledCourses'] ?? []),
-      grades: (json['grades'] as Map<String, dynamic>?)?.map(
-            (k, v) => MapEntry(k, (v as num).toDouble()),
-          ) ??
-          {},
-      skills: List<String>.from(json['skills'] ?? []),
-    );
-  }
-}
+PS C:\Users\квасдопил\smarthome\dart_basics_antupkin> git add lib/utils/calculator.dart bin/task1_variables.dart bin/task2_functions.dart
+warning: in the working copy of 'bin/task1_variables.dart', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'bin/task2_functions.dart', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'lib/utils/calculator.dart', LF will be replaced by CRLF the next time Git touches it
+PS C:\Users\квасдопил\smarthome\dart_basics_antupkin> git commit -m "feat(task2): complete variables, types and functions specification"
+[main ad755ce] feat(task2): complete variables, types and functions specification
+ 3 files changed, 77 insertions(+), 43 deletions(-)
+PS C:\Users\квасдопил\smarthome\dart_basics_antupkin> 
